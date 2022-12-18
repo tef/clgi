@@ -63,6 +63,9 @@ class Redirect(Exception):
         self.request = request
         Exception.__init__(self)
 
+class AppContext(dict):
+    pass
+
 class App:
     PREFIX = set((
         'help', 'profile', 'time',
@@ -113,7 +116,7 @@ class App:
         except Error as e:
             if any(a.startswith('--debug=') or a == '--debug' for a in argv):
                 raise
-            ctx = dict()
+            ctx = AppContext()
             if base_ctx:
                 ctx.update(base_ctx)
             ctx['app'] = self
@@ -183,20 +186,20 @@ class App:
                 app_args.append((name, value))
             else:
                 args.append((name, value))
-        _ctx = dict()
-        if base_ctx:
-            _ctx.update(base_ctx)
-        _ctx['app'] = self
-        _ctx['argv'] = argv
-        _ctx['name'] = self.name
-        ctx = self.parser.parse(app_args, named_args=True, defaults=False) 
-        if 'help' in ctx:
+        parser_ctx = self.parser.parse(app_args, named_args=True, defaults=False) 
+        if 'help' in parser_ctx:
             mode = 'usage'
-        if 'debug' in ctx:
-            mode = ctx['debug']
-        if 'version' in ctx:
+        if 'debug' in parser_ctx:
+            mode = parser_ctx['debug']
+        if 'version' in parser_ctx:
             mode = 'version'
-        ctx.update(_ctx)
+        ctx = AppContext()
+        ctx.update(parser_ctx)
+        if base_ctx:
+            ctx.update(base_ctx)
+        ctx['app'] = self
+        ctx['argv'] = argv
+        ctx['name'] = self.name
         return Request(ctx, mode, "", args)
 
     def complete(self, prefix):
