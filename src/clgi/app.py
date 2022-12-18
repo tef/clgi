@@ -70,10 +70,11 @@ class App:
     MODES = set((
         'call', 'help', 'error', 'usage', 'complete', 'version', 'debug', 'time', 'profile',
     ))
-    def __init__(self, *, name, version, args, command):
+    def __init__(self, *, name, version, args, command, pager=pager):
         self.name = name
         self.version = version
         self.command = command
+        self.pager = pager
         args = dict(args)
         args['help'] = '--bool*'
         args['version'] = '--bool?'
@@ -141,7 +142,7 @@ class App:
 
         response = to_response(response)
         if response:
-            pager(response, use_tty=(code == 0 and 'debug' not in request.ctx and request.mode not in ('debug', 'error')), hacker=request.ctx.get('hacker'))
+            self.pager(response, use_tty=(code == 0 and 'debug' not in request.ctx and request.mode not in ('debug', 'error')), hacker=request.ctx.get('hacker'))
         sys.exit(code) 
 
     def parse(self, argv, environ, base_ctx=None):
