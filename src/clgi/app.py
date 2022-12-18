@@ -145,7 +145,10 @@ class App:
 
         response = to_response(response)
         if response:
-            self.pager(response, use_tty=(code == 0 and 'debug' not in request.ctx and request.mode not in ('debug', 'error')), hacker=request.ctx.get('hacker'))
+            if self.pager:
+                self.pager(response, use_tty=(code == 0 and 'debug' not in request.ctx and request.mode not in ('debug', 'error')), hacker=request.ctx.get('hacker'))
+            else:
+                pager(response, use_tty=False)
         sys.exit(code) 
 
     def parse(self, argv, environ, base_ctx=None):
