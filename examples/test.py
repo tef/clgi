@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """ Example Command Line Application"""
 
+# Run this command in your terminal to setup tab complete
+# Inside the examples directory:
+# complete -C `pwd`/test.py test.py
+
 ## Boilerplate to allow project to run from checkout
 import os.path
 import sys
-PROJECT_ROOT = os.path.split(os.path.dirname(__file__))[0]
-sys.path.append(os.path.join(PROJECT_ROOT, "src"))
+FILENAME = os.path.normpath(__file__)
+PROJECT_ROOT = os.path.split(os.path.dirname(FILENAME))[0]
+MODULE_PATH = os.path.join(PROJECT_ROOT, "src")
+sys.path.append(MODULE_PATH)
 ## You do not want this in your project
 
 from clgi.errors import Bug, Error
