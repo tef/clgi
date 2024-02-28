@@ -23,7 +23,7 @@ app = clgi.App(name="test", version="2.3", command=router, args={})
 app.main(__name__)
 ```
 
-The `@command` decorator takes a list of arguments to pass into the wrapped function:
+The `Router` can also be used to route errors, with `router.on_error()`, and the `@command` decorator takes a list of arguments to pass into the wrapped function:
 
 ```
 import clgi
