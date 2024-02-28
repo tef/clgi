@@ -71,7 +71,9 @@ args = {
     "fourth":  "--string*" # string named argument, can repeat
 
     "final":  "string*" # string positional argument, can repeat
+    # could be "string", "string?" or "string+", for example
 }
+```
 
 The `@command` decorator doesn't let you use boolean arguments, and only
 allows for one type of positional argument. The former is because subcommands
