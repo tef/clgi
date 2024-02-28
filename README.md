@@ -75,12 +75,9 @@ args = {
 }
 ```
 
-The `@command` decorator doesn't let you use boolean arguments, and only
-allows for one type of positional argument. The former is because subcommands
-are better than boolean flags, and the latter is because it makes tab completiona bit of a pain in the arse.
+The `@command` only allows for one type of positional argument, because it makes tab completion a bit of a pain in the arse.  If you need it, it should be possible to write a raw clgi function. I believe I did, Bob.
 
-If you need either of those two things, it should be possible to write a raw
-clgi function. I believe I did, Bob.
+Note: although boolean arguments are supported, subcommands are better imho.
 
 ### Pager
 
