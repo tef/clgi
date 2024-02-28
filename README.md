@@ -112,4 +112,6 @@ way.
 There's downsides to this approach too. It makes interactive applications
 a bit more clumsy.
 
+There's a bit of a clumsy blog post here about this idea:
+https://cohost.org/tef/post/1210596-let-s-talk-about-com
 
