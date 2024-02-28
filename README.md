@@ -1,12 +1,16 @@
 # clgi: A commandline toolkit for python
 
-This is demo code extracted from a larger project. 
+Please Note: This is demo code extracted from a larger project. 
+
+## The big idea
 
 `clgi` is an attempt to write command line applications a little bit more like a webapp.
 
 ## Overview
 
-Instead of something like `argparse` or `optparse`, you define your application in terms of routes and commands:
+Instead of something like `argparse` or `optparse`, you define your application in terms of routes and commands.
+
+Here's a very small hello world app:
 
 ```
 import clgi
@@ -27,6 +31,7 @@ The `Router` can also be used to route errors, with `router.on_error()`, and the
 
 ```
 import clgi
+
 @clgi.command(args={"args": "string*"})
 def example(ctx, args):
     out = " ".join(args)
@@ -37,13 +42,15 @@ app = clgi.App(name="test", version="2.3", command=example, args={})
 app.main(__name__)
 ```
 
-Underneath, `clgi` works by having a standard callback for handling command line requests, 
-and a result code, much like wsgi. you don't have to use the `@command` decorator, or even a `Router`:
+Underneath, `clgi` works by having a standard callback for handling command line requests and a result code, much like wsgi. You don't have to use the `@command` decorator, or even a `Router`:
 
 ```
 import clgi
 
 def example_command(request, code):
+    if request.mode == "complete":
+        return []
+
     code(0) # return 0
     return "Hello, world!"
 
@@ -53,9 +60,13 @@ app.main(__name__)
 
 ```
 
-The app doesn't care if it's a `Router` or a `@command`, or a raw function,
-and neither does the Router. Only the `@command` decorator expects a normal
+The request object has a `ctx`, a `mode`, `path`, and `args`. Mode specifies
+things like "is this a tab completion", but also things like version, usage, debug, or profiling.
+
+
+Note: The app doesn't care if it's a `Router` or a `@command`, or a raw function, and neither does the Router. Only the `@command` decorator expects a normal
 python function.
+
 
 ## Argument parsing and tab completion
 
@@ -88,3 +99,17 @@ tables, headers, and lists. this code does "a list of strings" so there
 isn't much to reflow on resize.
 
 one day (not today), clgi will let you browse the app's documentation.
+
+## The big idea, part two.
+
+The problem with argparse and optparse is that being libraries, there's
+no easy way to deduplicate a lot of the boilerplate that goes into using them.
+
+Structuring the command line as an app, router, and commands lets us handle
+things like tab completion, or text rendering, or error handling in a unified
+way.
+
+There's downsides to this approach too. It makes interactive applications
+a bit more clumsy.
+
+
