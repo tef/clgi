@@ -16,16 +16,17 @@ from .errors import Bug, Error
 from .argparser import ArgumentParser
 from .tty import pager
 
+in_complete = 'COMP_LINE' in os.environ and 'COMP_POINT' in os.environ
+
 def to_response(response):
-    if not isinstance(response, Response):
-        response = Plaintext(response)
+    if getattr(response, "render", None) == None:
+        if isinstance(response, str):
+            response = Response([response])
+        else:
+            response = Response(response)
     return response
 
-class Response:
-    pass
-
-in_complete = 'COMP_LINE' in os.environ and 'COMP_POINT' in os.environ
-class Multiple(Response):
+class Multiple:
     def __init__(self, original, extra):
         self.original = original
         self.extra = extra
@@ -35,17 +36,17 @@ class Multiple(Response):
         mapping2, lines2 = self.extra.render(width, height, encoding)
         return {}, lines1 + [""] + lines2
 
-class Plaintext(Response):
+class Response:
     def __init__(self, lines):
         self.lines = lines
     def render(self, width, height, encoding):
         if isinstance(self.lines, str):
             if encoding is not None: 
-                return [], [line.encode(encoding) for line in self.lines.encode(encoding, 'replace').decode()]
-            return [], self.lines.splitlines()
+                return {}, [line.encode(encoding) for line in self.lines.encode(encoding, 'replace').decode()]
+            return {}, self.lines.splitlines()
         if encoding is not None:
-            return [], [line.encode(encoding, 'replace').decode() for line in self.lines]
-        return [], self.lines
+            return {}, [line.encode(encoding, 'replace').decode() for line in self.lines]
+        return {}, self.lines
 
 # Errors
 

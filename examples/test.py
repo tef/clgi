@@ -15,7 +15,7 @@ sys.path.append(MODULE_PATH)
 ## You do not want this in your project
 
 from clgi.errors import Bug, Error
-from clgi.app import App, Router, command, Plaintext
+from clgi.app import App, Router, command, Response
 
 class AppError(Error):
     pass
@@ -37,7 +37,7 @@ def Sum(ctx, nums):
     app = ctx['app']
     name = ctx['name']
     out = sum(nums)
-    return Plaintext(str(out))
+    return Response(str(out))
 
 
 app = App(
